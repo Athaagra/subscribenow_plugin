@@ -739,36 +739,33 @@ class suno_SubscribeNow {
 	  $errorport= null;
 	  $errorsecure = null;
 	  if (current_user_can('administrator')){
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['serveraddress']) && strpos($_POST['serveraddress'],".") !==false){
+		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+			//if (str_contains($_POST['serveraddress'],".")=== false){
 				$subscriber['serveradd'] = sanitize_text_field( wp_unslash ( $_POST['serveraddress'] ) ) ;//sanitize_text_field($_POST['serveraddress']);
-		} else{
-				echo esc_html('Server Address is required');
-		}
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname'])){
+			//}else { echo esc_html('Server Address is required'); }
+		//} else{
+		//		echo esc_html('Server Address is required');
+		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpname'] =  sanitize_text_field( wp_unslash ( $_POST['smtpname'] ) ) ;//sanitize_text_field($_POST['smtpname']);
-			} else {
-				  echo esc_html('smtp name is required');
-			}
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpusername']) && strpos($_POST['smtpusername'],"@") !==false){
+		//} else {
+		//		  echo esc_html('smtp name is required');
+		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpusername'] = sanitize_text_field( wp_unslash ( $_POST['smtpusername'] ) ) ;// sanitize_text_field($_POST['smtpusername']);  
-		    } else {
-				  echo esc_html('Smtp email is required');
-		    }
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtppassword'])){
+		//} else {
+		//		  echo esc_html('Smtp email is required');
+		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtppass'] = sanitize_text_field( wp_unslash ( $_POST['smtppassword'] ) ) ;//sanitize_text_field($_POST['smtppassword']);
-			} else {
-				  echo esc_html('smtp password is required');
-			}
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpport'])){
+		//} else {
+		//		  echo esc_html('smtp password is required');
+		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtppo'] = sanitize_text_field( wp_unslash ( $_POST['smtpport'] ) ) ;//sanitize_text_field($_POST['smtpport']);
-			} else {
-				   echo esc_html('Port is required');
-			}
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpsecure'])){
+		//} else {
+		//		   echo esc_html('Port is required');
+		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpsec'] = sanitize_text_field( wp_unslash ( $_POST['smtpsecure'] ) ) ;//sanitize_text_field($_POST['smtpsecure']);
-			} else {
-				  echo esc_html('TLS number is required');
-			}
+		} else {
+				  echo esc_html('not correct argument');
+		}
 		  global $wpdb;
 		  $wpdb -> insert($this->tablename, $subscriber);
 		  wp_safe_redirect(site_url('/wp-admin/admin.php?page=subscribenow'));
