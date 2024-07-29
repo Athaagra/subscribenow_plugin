@@ -38,7 +38,7 @@ function suno_table(){
   dbDelta( $sql );
 
 }
-function ch_empt($lifespan) {
+function suno_empt($lifespan) {
 	if(empty($lifespan)){
 			return TRUE;
 	}else{
@@ -56,7 +56,7 @@ function suno_tbare($atts) {
 	
 	<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" class="create-sub-form" method="POST">
 				<input type="hidden" name="action" value="createsubscriber">
-				<input type="hidden" name="my-nonces" value="<?php echo wp_create_nonce('my-nonces'); ?>">
+				<input type="hidden" name="my-nonces" value="<?php echo esc_html(wp_create_nonce('my-nonces')); ?>">
 				<input type="text" name="incomingsubscriber" placeholder="e-mail">
 				<button> Subscribe </button>
 			</form>
@@ -134,7 +134,7 @@ class suno_SubscribeNow {
 			<input type="hidden" name="action" value="createsmtp">
 			<div>
 			<input type="text" name="serveraddress" placeholder="Server address:smtp.gmail.com">
-			<input type="hidden" name="my-nonce" value="<?php echo wp_create_nonce('my-nonce'); ?>">
+			<input type="hidden" name="my-nonce" value="<?php echo esc_html(wp_create_nonce('my-nonce')); ?>">
 			</div>
 			<div>
 			<input type="text" name="smtpname" placeholder="full name: Hakin">
@@ -198,7 +198,7 @@ class suno_SubscribeNow {
 		//<php if (isset($_POST['newsl']))>
 		<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="POST">
 			<input type="hidden" name="action" value="createmessage">
-			<input type="hidden" name="my-noncem" value="<?php echo wp_create_nonce('my-noncem'); ?>">
+			<input type="hidden" name="my-noncem" value="<?php echo esc_html(wp_create_nonce('my-noncem')); ?>">
 			<label for="plugin_subscribe_now"><p> Enter the message </p></label>
 			
 			<textarea name="plugin_subj" id="plugin_subj" placeholder="subject"></textarea>
@@ -218,8 +218,8 @@ class suno_SubscribeNow {
 		<td style="text-align: center;">
 		<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="POST">
 			<input type="hidden" name="action" value="deletesubscriber">
-			<input type="hidden" name="my-nonced" value="<?php echo wp_create_nonce('my-nonced'); ?>">
-			<input type="hidden" name="idtodelete" value="<?php echo $subscriber->id; ?>">
+			<input type="hidden" name="my-nonced" value="<?php echo esc_html(wp_create_nonce('my-nonced')); ?>">
+			<input type="hidden" name="idtodelete" value="<?php echo esc_html($subscriber->id); ?>">
 			<button class="delete-subscriber-button"> X </button>
 		</form>
 	  </td>
@@ -227,7 +227,7 @@ class suno_SubscribeNow {
 		<form method="POST">
 			<input type="hidden" name="sendmail" value="true">
 			<input type="hidden" name="idsendmail" value="<?php echo esc_html($subscriber->email); ?>">
-			<input type="hidden" name="my-nonceis" value="<?php echo wp_create_nonce('my-nonceis'); ?>">
+			<input type="hidden" name="my-nonceis" value="<?php echo esc_html(wp_create_nonce('my-nonceis')); ?>">
 			<button class="send-subscriber-button"> send mail..</button>
 			<?php } ?>
 			<?php if (isset($_POST['sendmail'])and wp_verify_nonce($_POST['my-nonceis'],'my-nonceis') and !empty($_POST['sendmail'])) $this->sendForm() ?> 
@@ -468,8 +468,8 @@ class suno_SubscribeNow {
             return false;
     }
     /*reply_to code */
-    $smtpmailer_reply_to = '';
-    $smtpmailer_reply_to = apply_filters('smtpmailer_reply_to', $smtpmailer_reply_to);
+    $suno_smtpmailer_reply_to = '';
+    $smtpmailer_reply_to = apply_filters('smtpmailer_reply_to', $suno_smtpmailer_reply_to);
     if(isset($smtpmailer_reply_to) && !empty($smtpmailer_reply_to)){
         $temp_reply_to_addresses = explode(",", $smtpmailer_reply_to);
         $reply_to = array();
@@ -547,7 +547,7 @@ class suno_SubscribeNow {
     // Whether to enable TLS encryption automatically if a server supports it
     $phpmailer->SMTPAutoTLS = false;
     //enable debug when sending a test mail
-    if(isset($_POST['smtp_mailer_send_test_email']) and wp_verify_nonce($_POST['smtp_mailer_send_test_email'],'ch_empty')){
+    if(isset($_POST['smtp_mailer_send_test_email']) and wp_verify_nonce($_POST['smtp_mailer_send_test_email'],'suno_empty')){
         $phpmailer->SMTPDebug = 1;
         // Ask for HTML-friendly debug output
         $phpmailer->Debugoutput = 'html';
