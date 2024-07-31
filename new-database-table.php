@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 /*
    Plugin Name: SubscribeNow
@@ -13,7 +13,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
-function suno_table(){
+function sn_table(){
 
   global $wpdb;
   $charset_collate = $wpdb->get_charset_collate();
@@ -38,20 +38,18 @@ function suno_table(){
   dbDelta( $sql );
 
 }
-function suno_empt($lifespan) {
+function sn_empt($lifespan) {
 	if(empty($lifespan)){
 			return TRUE;
 	}else{
 			return FALSE;
 	}
 }
-#wp_create_nonce('check_empt');
-#wp_nonce_field('check_empty','check_empt');
 
 
-register_activation_hook( __FILE__, 'suno_table' );
+register_activation_hook( __FILE__, 'sn_table' );
 
-function suno_tbare($atts) {
+function sn_tbare($atts) {
 	ob_start();?>
 	
 	<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" class="create-sub-form" method="POST">
@@ -67,15 +65,14 @@ function suno_tbare($atts) {
 			
 }
 
-add_shortcode('subscribe_area', 'suno_tbare');
+add_shortcode('subscribe_area', 'sn_tbare');
 
-//if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly NOT USE FOR NOW
-//require_once plugin_dir_path(__FILE__) . 'inc/generateUser.php';
+
 define( 'NEWDATABASETABLEPATH', plugin_dir_path( __FILE__ ));
 require_once plugin_dir_path(__FILE__) . 'inc/GetSubscribers.php';
-//include '../../../wp-load.php';
 
-class suno_SubscribeNow {
+
+class sn_SubscribeNow {
   function __construct() {
 		global $wpdb;
 		$this->charset = $wpdb->get_charset_collate();
@@ -157,7 +154,7 @@ class suno_SubscribeNow {
   <?php }
   
   function handleForm() {
-	$getSubscribers = new suno_GetSubscribers();
+	$getSubscribers = new sn_GetSubscribers();
 	//if($getSubscribers->num_rows > 0){ 
 	$delimiter = ","; 
 	$filename = "members-data_" . gmdate('Y-m-d') . ".csv";      
@@ -185,7 +182,7 @@ class suno_SubscribeNow {
 	
 	
   function subscriberlist() { 
-	$getSubscribers = new suno_GetSubscribers();
+	$getSubscribers = new sn_GetSubscribers();
  
 	$justsubmitted = false;?>
 	 <table class="sub-adoption-table">
@@ -202,11 +199,9 @@ class suno_SubscribeNow {
 			<label for="plugin_subscribe_now"><p> Enter the message </p></label>
 			
 			<textarea name="plugin_subj" id="plugin_subj" placeholder="subject"></textarea>
-			<!--<p class="errorsubj"><php echo esc_html($errorsubj); ?></p>-->
 			<div class="word-filter__flex-container">
 				<textarea name="plugin_subscribers" id="plugin_subscribers" placeholder="Newsletter Area" style="height: 300px; width:500px;"></textarea>
 			</div>
-			<!--<p class="errorsubscribers"><php echo esc_html($errorsubscribers); ?></p>-->
 			<button class="send-subscriber-button"> save message</button>
 		</form>
 	</div>
@@ -214,7 +209,6 @@ class suno_SubscribeNow {
 	foreach($getSubscribers->subscribers as $subscriber) { ?>
     <tr>
       <td><?php echo esc_html($subscriber->email); ?></td>
-      <!--<php if(current_user_can('administrator')) { ?>-->
 		<td style="text-align: center;">
 		<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="POST">
 			<input type="hidden" name="action" value="deletesubscriber">
@@ -230,7 +224,7 @@ class suno_SubscribeNow {
 			<input type="hidden" name="my-nonceis" value="<?php echo esc_html(wp_create_nonce('my-nonceis')); ?>">
 			<button class="send-subscriber-button"> send mail..</button>
 			<?php } ?>
-			<?php if (isset($_POST['sendmail'])and wp_verify_nonce($_POST['my-nonceis'],'my-nonceis') and !empty($_POST['sendmail'])) $this->sendForm() ?> 
+			<?php if (isset($_POST['sendmail'])and wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonceis'])),'my-nonceis') and !empty($_POST['sendmail'])) $this->sendForm() ?> 
 		</form>
 	  </td>
 	  <!--<php } ?>-->
@@ -246,7 +240,7 @@ class suno_SubscribeNow {
   }
   
   function sendForm() {
-	  $getSubscribers = new suno_GetSubscribers();
+	  $getSubscribers = new sn_GetSubscribers();
 	  foreach($getSubscribers->messagequery as $msg){ 
 		$subj= $msg->subject; 
 		$mes = $msg->message;
@@ -468,8 +462,8 @@ class suno_SubscribeNow {
             return false;
     }
     /*reply_to code */
-    $suno_smtpmailer_reply_to = '';
-    $smtpmailer_reply_to = apply_filters('smtpmailer_reply_to', $suno_smtpmailer_reply_to);
+    $sn_smtpmailer_reply_to = '';
+    $smtpmailer_reply_to = apply_filters('smtpmailer_reply_to', $sn_smtpmailer_reply_to);
     if(isset($smtpmailer_reply_to) && !empty($smtpmailer_reply_to)){
         $temp_reply_to_addresses = explode(",", $smtpmailer_reply_to);
         $reply_to = array();
@@ -547,7 +541,7 @@ class suno_SubscribeNow {
     // Whether to enable TLS encryption automatically if a server supports it
     $phpmailer->SMTPAutoTLS = false;
     //enable debug when sending a test mail
-    if(isset($_POST['smtp_mailer_send_test_email']) and wp_verify_nonce($_POST['smtp_mailer_send_test_email'],'suno_empty')){
+    if(isset($_POST['smtp_mailer_send_test_email']) and wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['smtp_mailer_send_test_email'])),'sn_empty')){
         $phpmailer->SMTPDebug = 1;
         // Ask for HTML-friendly debug output
         $phpmailer->Debugoutput = 'html';
@@ -673,7 +667,7 @@ class suno_SubscribeNow {
 
   function deletesubscriber() {
 	  if (current_user_can('administrator')){
-		  if(wp_verify_nonce($_POST['my-nonced'],'my-nonced') && !empty($_POST['idtodelete'])){
+		  if(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonced'])),'my-nonced') && !empty($_POST['idtodelete'])){
 			$id = sanitize_text_field( wp_unslash ( $_POST['idtodelete'] ) ) ; //sanitize_text_field($_POST['idtodelete']);
 		  }else{
 			  echo esc_html('There is no entry to delete');
@@ -691,8 +685,8 @@ class suno_SubscribeNow {
   
   function createsubscriber() {
 	  //if (current_user_can('administrator')){
-		  //$subscriber = suno_generateUser();
-	    if(!filter_var($_POST['incomingsubscriber'],FILTER_VALIDATE_EMAIL) and wp_verify_nonce($_POST['my-nonces'],'my-nonces')){
+		  //$subscriber = sn_generateUser();
+	    if(!filter_var($_POST['incomingsubscriber'],FILTER_VALIDATE_EMAIL) and wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonces'])),'my-nonces')){
 			echo esc_html("Email is required");
 			wp_safe_redirect(site_url());
 		}else{
@@ -711,12 +705,12 @@ class suno_SubscribeNow {
 	  $errorsubj=null;
 	  $errorsubscribers=null;
 	  if (current_user_can('administrator')){
-		if(wp_verify_nonce($_POST['my-noncem'],'my-noncem')  && !empty($_POST['plugin_subj'])){
+		if(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-noncem'])),'my-noncem')  && !empty($_POST['plugin_subj'])){
 			$subscriber['subject'] = sanitize_text_field( wp_unslash ( $_POST['plugin_subj'] ) ) ; //sanitize_text_field($_POST['plugin_subj']);
 		}else{
 			echo esc_html('Message subject is required');
 		}
-		if(wp_verify_nonce($_POST['my-noncem'],'my-noncem') && !empty($_POST['plugin_subscribers'])){
+		if(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-noncem'])),'my-noncem') && !empty($_POST['plugin_subscribers'])){
 			$subscriber['message'] = sanitize_text_field( wp_unslash ( $_POST['plugin_subscribers'] ) ) ;//sanitize_text_field($_POST['plugin_subscribers']);
 		}else {
 			echo esc_html('Text message is required');
@@ -739,29 +733,29 @@ class suno_SubscribeNow {
 	  $errorport= null;
 	  $errorsecure = null;
 	  if (current_user_can('administrator')){
-		if(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		if(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 			//if (str_contains($_POST['serveraddress'],".")=== false){
 				$subscriber['serveradd'] = sanitize_text_field( wp_unslash ( $_POST['serveraddress'] ) ) ;//sanitize_text_field($_POST['serveraddress']);
 			//}else { echo esc_html('Server Address is required'); }
 		//} else{
 		//		echo esc_html('Server Address is required');
-		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		} elseif(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpname'] =  sanitize_text_field( wp_unslash ( $_POST['smtpname'] ) ) ;//sanitize_text_field($_POST['smtpname']);
 		//} else {
 		//		  echo esc_html('smtp name is required');
-		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		} elseif(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpusername'] = sanitize_text_field( wp_unslash ( $_POST['smtpusername'] ) ) ;// sanitize_text_field($_POST['smtpusername']);  
 		//} else {
 		//		  echo esc_html('Smtp email is required');
-		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		} elseif(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtppass'] = sanitize_text_field( wp_unslash ( $_POST['smtppassword'] ) ) ;//sanitize_text_field($_POST['smtppassword']);
 		//} else {
 		//		  echo esc_html('smtp password is required');
-		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		} elseif(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtppo'] = sanitize_text_field( wp_unslash ( $_POST['smtpport'] ) ) ;//sanitize_text_field($_POST['smtpport']);
 		//} else {
 		//		   echo esc_html('Port is required');
-		} elseif(wp_verify_nonce($_POST['my-nonce'],'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
+		} elseif(wp_verify_nonce( sanitize_text_field( wp_unslash ($_POST['my-nonce'])),'my-nonce') && !empty($_POST['smtpname']) && !empty($_POST['serveraddress']) && !empty($_POST['smtpusername']) && !empty($_POST['smtppassword']) && !empty($_POST['smtpport']) && !empty($_POST['smtpsecure'])){
 				$subscriber['smtpsec'] = sanitize_text_field( wp_unslash ( $_POST['smtpsecure'] ) ) ;//sanitize_text_field($_POST['smtpsecure']);
 		} else {
 				  echo esc_html('not correct argument');
@@ -786,7 +780,7 @@ class suno_SubscribeNow {
 
   function onAdminRefresh() {
     global $wpdb;
-	$wpdb->insert($this->tablename,suno_generateUser());
+	$wpdb->insert($this->tablename,sn_generateUser());
   }
 
   function loadAssets() {
@@ -806,7 +800,7 @@ class suno_SubscribeNow {
     $query = "INSERT INTO $this->tablename (`email`) VALUES ";
     $numberofusers = 100000;
     for ($i = 0; $i < $numberofusers; $i++) {
-      $subscriber = suno_generateUser();
+      $subscriber = sn_generateUser();
       $query .= "('{$subscriber['email']}')";
       if ($i != $numberofusers - 1) {
         $query .= ", ";
@@ -826,9 +820,9 @@ class suno_SubscribeNow {
 
  
 
-$subscribeNow = new suno_SubscribeNow();
+$subscribeNow = new sn_SubscribeNow();
 
-class suno_OurPluginPlaceholderBlock {
+class sn_OurPluginPlaceholderBlock {
   function __construct($name) {
     $this->name = $name;
     add_action('init', [$this, 'onInit']);
@@ -849,4 +843,4 @@ class suno_OurPluginPlaceholderBlock {
     ));
   }
 }
-new suno_OurPluginPlaceholderBlock("subscribenow");
+new sn_OurPluginPlaceholderBlock("subscribenow");
