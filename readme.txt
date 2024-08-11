@@ -2,12 +2,13 @@
 Contributors: Subscirbe and keep track of your visitors
 Tags: database, wordpress, newsletter
 Requires at least: 6.4.4
-Tested up to: 6.4.3
+Tested up to: 6.6.1
 Stable tag: 1.0.0
 Author URI: https://agrafiotis.info
 Donate link: https://www.paypal.com/donate/?hosted_button_id=LJKW8ZMVFSM9S&sdkMeta=eyJ1cmwiOiJodHRwczovL3d3dy5wYXlwYWxvYmplY3RzLmNvbS9kb25hdGUvc2RrL2RvbmF0ZS1zZGsuanMiLCJhdHRycyI6eyJkYXRhLXVpZCI6IjI1YzU0MGNjZjNfbWRrNm5kZzZuZGcifX0&targetMeta=eyJ6b2lkVmVyc2lvbiI6IjlfMF81OCIsInRhcmdldCI6IkRPTkFURSIsInNka1ZlcnNpb24iOiIwLjguMCJ9
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Link to download: https://github.com/Athaagra/subscribenow_plugin/raw/main/Subscribenow.zip
 Copyright (C) 2024  Athanasios Agrafiotis
 
 This program is free software: you can redistribute it and/or modify
