@@ -42,6 +42,16 @@ you put the stable version, in order to eliminate any doubt.
 All the web design style that is used for the is plugin is in the main folder in the document "subscribers-s.css".
 Not additional libraries are used for javascript and css that are linked with other softwares.
 
+For all the js libraries, the npm node js have been used:
+To make nodejs is installed navigating to the folder and run init that create the package.json file.
+The package.json modified with start in:
+		"start": "wp-scripts start src/subscribenow.js"
+and the modules that have been used for the implementation are:
+		"@glidejs/glide": "^3.4.1",
+		"@wordpress/scripts": "*",
+		"axios": "^0.21.1",
+		"normalize.css": "^8.0.1",
+		"package.json": "^2.0.1"
 
 A plugin that creates a subscription menu you can host it in all your pages and posts moreover store the subsrciber and support mail messages.
 
