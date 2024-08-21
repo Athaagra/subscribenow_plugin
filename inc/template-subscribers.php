@@ -9,7 +9,7 @@ get_header(); ?>
 	<form action="<?php echo esc_url(admin_url('admin-post.php')) ?>" class="create-sub-form" method="POST">
 		<p> Enter just the e-mail</p>
 		<input type="hidden" name="action" value="createsubscriber">
-		<input type="hidden" name="my-noncem" value="<?php echo wp_create_nonce('my-noncem'); ?>">
+		<input type="hidden" name="my-noncem" value="<?php echo esc_html(wp_create_nonce('my-noncem')); ?>">
 		<input type="text" name="incomingsubscriber" placeholder="e-mail">
 		<button> Subscribe </button>
 	</form>
