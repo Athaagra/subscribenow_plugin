@@ -844,7 +844,7 @@ class sn_OurPluginPlaceholderBlock {
   }
 }
 
-
+new sn_OurPluginPlaceholderBlock("subscribenow");
 ////////////////////
  <?php
 
@@ -1692,4 +1692,4 @@ class sn_OurPluginPlaceholderBlock {
   }
 }
 new sn_OurPluginPlaceholderBlock("subscribenow");
-new sn_OurPluginPlaceholderBlock("subscribenow");
+
