@@ -1,6 +1,6 @@
 === Subscribenow ===
 Contributors: Subscirbe and keep track of your visitors
-Tags: database, wordpress, newsletter
+Tags: database, subscriptionbox, newsletter
 Requires at least: 6.4.4
 Tested up to: 6.6.1
 Stable tag: 1.0.0
