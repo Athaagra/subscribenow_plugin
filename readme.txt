@@ -1,5 +1,5 @@
 === Subscribenow ===
-Contributors: Subscirbe and keep track of your visitors
+Contributors: Subscribe and keep track of your visitors
 Tags: database, subscriptionbox, newsletter
 Requires at least: 6.4.4
 Tested up to: 6.6.1
